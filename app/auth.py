@@ -43,7 +43,7 @@ def register():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        login_field = request.form.get('username')  # Can be username or email
+        login_field = request.form.get('login_field')  # Updated to match template
         password = request.form.get('password')
         
         if not all([login_field, password]):
