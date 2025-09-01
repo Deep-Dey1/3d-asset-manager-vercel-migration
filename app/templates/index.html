@@ -177,13 +177,14 @@ function loadRecentModel(modelId) {
     }
 }
 
-// Auto-load first recent model on page load
+// Auto-load all recent models on page load
 document.addEventListener('DOMContentLoaded', function() {
     const recentViewers = document.querySelectorAll('[id^="viewer-recent-"]');
-    if (recentViewers.length > 0) {
-        const firstModelId = recentViewers[0].id.replace('viewer-recent-', '');
-        setTimeout(() => loadRecentModel(firstModelId), 1000);
-    }
+    recentViewers.forEach((viewer, index) => {
+        const modelId = viewer.id.replace('viewer-recent-', '');
+        // Stagger loading to avoid overwhelming the server
+        setTimeout(() => loadRecentModel(modelId), 1000 + (index * 500));
+    });
 });
 </script>
 {% endif %}
