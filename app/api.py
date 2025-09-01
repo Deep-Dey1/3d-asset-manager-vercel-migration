@@ -6,6 +6,15 @@ import io
 
 api_bp = Blueprint('api', __name__)
 
+@api_bp.route('/test')
+def test_api():
+    """Simple test endpoint to verify API is working"""
+    return jsonify({
+        'status': 'success',
+        'message': 'API is working!',
+        'timestamp': str(Model3D().upload_date)
+    })
+
 @api_bp.route('/models')
 def list_models():
     """List models with pagination and search"""
@@ -236,20 +245,35 @@ def get_user_models():
 @login_required
 def upload_model():
     """API endpoint for uploading 3D models"""
+    print("🔄 Upload API called - Starting processing...")
+    
     try:
+        # Log request info
+        print(f"📋 Request method: {request.method}")
+        print(f"📋 Content length: {request.content_length}")
+        print(f"📋 Form keys: {list(request.form.keys())}")
+        print(f"📋 Files keys: {list(request.files.keys())}")
+        print(f"📋 Current user: {current_user.username if current_user.is_authenticated else 'Not authenticated'}")
+        
         # Get form data
         name = request.form.get('name', '').strip()
         description = request.form.get('description', '').strip()
         is_public = request.form.get('is_public') == 'true'  # Note: 'true' for JSON boolean
         
+        print(f"📋 Form data - Name: {name}, Description: {description[:50] if description else 'None'}, Public: {is_public}")
+        
         # Get uploaded file
         file = request.files.get('file')
         
         if not file or file.filename == '':
+            print("❌ No file provided")
             return jsonify({'error': 'Please select a file to upload.'}), 400
         
         if not name:
+            print("❌ No name provided")
             return jsonify({'error': 'Please provide a name for your model.'}), 400
+        
+        print(f"📋 File info - Name: {file.filename}, Content-Type: {file.content_type}")
         
         # Import secure_filename
         from werkzeug.utils import secure_filename
@@ -258,19 +282,27 @@ def upload_model():
         filename = secure_filename(file.filename)
         file_extension = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
         
+        print(f"📋 File extension: {file_extension}")
+        
         allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
         if file_extension not in allowed_extensions:
+            print(f"❌ Invalid file extension: {file_extension}")
             return jsonify({'error': f'File type not supported. Allowed: {", ".join(allowed_extensions)}'}), 400
         
         # Read file content
+        print("📋 Reading file content...")
         file_content = file.read()
         file_size = len(file_content)
         
-        # Check file size (100MB limit)
+        print(f"📋 File size: {file_size} bytes ({file_size / (1024*1024):.2f} MB)")
+        
+        # Check file size (4MB limit for Vercel)
         if file_size > current_app.config['MAX_CONTENT_LENGTH']:
-            return jsonify({'error': 'File too large. Maximum size is 100MB.'}), 400
+            print(f"❌ File too large: {file_size} > {current_app.config['MAX_CONTENT_LENGTH']}")
+            return jsonify({'error': 'File too large. Maximum size is 4MB for Vercel deployment.'}), 400
         
         # Store file in GridFS
+        print("📋 Storing file in GridFS...")
         fs = current_app.config['GRIDFS']
         gridfs_file_id = fs.put(
             file_content,
@@ -283,7 +315,10 @@ def upload_model():
             }
         )
         
+        print(f"📋 GridFS file ID: {gridfs_file_id}")
+        
         # Create model record
+        print("📋 Creating model record...")
         model = Model3D(
             name=name,
             description=description,
@@ -296,6 +331,7 @@ def upload_model():
         )
         
         model.save()
+        print(f"📋 Model saved with ID: {model.id}")
         
         # Return success response with model data
         return jsonify({
@@ -314,7 +350,7 @@ def upload_model():
         }), 201
         
     except Exception as e:
-        print(f"API upload error: {e}")
+        print(f"❌ API upload error: {e}")
         import traceback
         traceback.print_exc()
         return jsonify({'error': 'Upload failed. Please try again.'}), 500
