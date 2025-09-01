@@ -211,22 +211,22 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-4">
                     <a href="{{ url_for('main.index') }}" class="flex items-center space-x-3">
-                        <div class="bg-blue-600 text-white p-2 rounded-lg shadow-md">
+                        <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-md">
                             <i class="fas fa-cube text-xl"></i>
                         </div>
-                        <span class="text-2xl font-bold text-blue-600">3D Asset Manager</span>
+                        <span class="text-2xl font-bold text-indigo-600">3D Asset Manager</span>
                     </a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="{{ url_for('main.index') }}" class="text-gray-600 hover:text-blue-600 transition">Home</a>
-                    <a href="{{ url_for('main.browse') }}" class="text-gray-600 hover:text-blue-600 transition">Browse</a>
+                    <a href="{{ url_for('main.index') }}" class="text-gray-600 hover:text-indigo-600 transition">Home</a>
+                    <a href="{{ url_for('main.browse') }}" class="text-gray-600 hover:text-indigo-600 transition">Browse</a>
                     {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('main.dashboard') }}" class="text-gray-600 hover:text-blue-600 transition">Dashboard</a>
-                        <a href="{{ url_for('main.profile') }}" class="text-gray-600 hover:text-blue-600 transition">Profile</a>
+                        <a href="{{ url_for('main.dashboard') }}" class="text-gray-600 hover:text-indigo-600 transition">Dashboard</a>
+                        <a href="{{ url_for('main.profile') }}" class="text-gray-600 hover:text-indigo-600 transition">Profile</a>
                         <a href="{{ url_for('auth.logout') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">Logout</a>
                     {% else %}
-                        <a href="{{ url_for('auth.login') }}" class="text-gray-600 hover:text-blue-600 transition">Login</a>
-                        <a href="{{ url_for('auth.register') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Register</a>
+                        <a href="{{ url_for('auth.login') }}" class="text-gray-600 hover:text-indigo-600 transition">Login</a>
+                        <a href="{{ url_for('auth.register') }}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Register</a>
                     {% endif %}
                 </div>
             </div>
@@ -278,7 +278,7 @@
                 <p>&copy; 2025 3D Asset Manager. Created by Deep Dey</p>
                 <div class="mt-2 flex justify-center space-x-6 text-sm">
                     <a href="mailto:deepdey715@gmail.com" class="text-gray-300 hover:text-white transition">
-                        <i class="fas fa-envelope mr-1"></i>deepdey715@gmail.com
+                        <i class="fas fa-envelope mr-1"></i>Email
                     </a>
                     <a href="https://www.linkedin.com/in/deepdey0210/" target="_blank" class="text-gray-300 hover:text-white transition">
                         <i class="fab fa-linkedin mr-1"></i>LinkedIn
