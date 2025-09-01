@@ -177,6 +177,23 @@ class Model3D:
             print(f"Error reading file from GridFS: {e}")
         return None
     
+    def get_file_size_formatted(self):
+        """Format file size in human readable format"""
+        if not self.file_size:
+            return "Unknown"
+        
+        size = self.file_size
+        for unit in ['bytes', 'KB', 'MB', 'GB']:
+            if size < 1024.0:
+                return f"{size:.1f} {unit}"
+            size /= 1024.0
+        return f"{size:.1f} TB"
+    
+    @property
+    def file_extension(self):
+        """Get file extension (alias for file_format for template compatibility)"""
+        return self.file_format
+    
     @staticmethod
     def get_by_id(model_id):
         """Get model by ID"""

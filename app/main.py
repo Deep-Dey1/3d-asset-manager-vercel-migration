@@ -10,11 +10,18 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/')
 def index():
     try:
+        print("🔄 Loading homepage...")
+        
         # Get recent public models
-        recent_models, _ = Model3D.get_public_models(page=1, per_page=6)
+        recent_models, total_public = Model3D.get_public_models(page=1, per_page=6)
+        
+        print(f"📋 Found {total_public} public models for homepage")
+        for i, model in enumerate(recent_models[:3]):
+            print(f"   Recent Model {i+1}: {model.name} (Public: {model.is_public})")
         
         # Get statistics
         stats = Model3D.get_stats()
+        print(f"📊 Stats: {stats}")
         
         return render_template('index.html', 
                              recent_models=recent_models,
@@ -23,6 +30,8 @@ def index():
                              total_downloads=stats['total_downloads'])
     except Exception as e:
         print(f"Index page error: {e}")
+        import traceback
+        traceback.print_exc()
         # Fallback values if database query fails
         return render_template('index.html', 
                              recent_models=[],
@@ -35,7 +44,13 @@ def index():
 def dashboard():
     """User dashboard"""
     try:
+        print(f"🔄 Dashboard for user: {current_user.id} ({current_user.username})")
+        
         user_models, total_user_models = Model3D.get_user_models(current_user.id, page=1, per_page=10)
+        
+        print(f"📋 Found {total_user_models} models for user {current_user.id}")
+        for i, model in enumerate(user_models[:3]):
+            print(f"   Model {i+1}: {model.name} (Public: {model.is_public})")
         
         # Calculate user stats
         total_downloads = sum(model.download_count for model in user_models)
@@ -48,6 +63,8 @@ def dashboard():
                              public_models=public_models)
     except Exception as e:
         print(f"Dashboard error: {e}")
+        import traceback
+        traceback.print_exc()
         return render_template('dashboard.html', 
                              user_models=[],
                              total_models=0,
