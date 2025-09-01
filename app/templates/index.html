@@ -257,76 +257,201 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
 
-        <!-- CLI Examples -->
+        <!-- Interactive CLI Examples -->
         <div class="bg-gray-900 rounded-xl p-8 text-white">
-            <h3 class="text-2xl font-semibold mb-6 text-center">
-                <i class="fas fa-terminal mr-2"></i>CLI Examples
+            <h3 class="text-3xl font-semibold mb-6 text-center">
+                <i class="fas fa-terminal mr-2"></i>Interactive API Guide
             </h3>
+            <p class="text-center text-gray-300 mb-8">Follow this step-by-step guide to interact with our 3D Asset Manager API</p>
             
-            <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Login -->
-                <div class="bg-gray-800 rounded-lg p-6">
-                    <h4 class="text-lg font-semibold mb-3 text-blue-400">
-                        <i class="fas fa-sign-in-alt mr-2"></i>1. Login
-                    </h4>
-                    <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code># Login to get session
-curl -X POST https://3d-asset-manager.deepdey.me/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "user@example.com",
-    "password": "your_password"
-  }' \
-  -c cookies.txt</code></pre>
-                </div>
-
-                <!-- Upload -->
-                <div class="bg-gray-800 rounded-lg p-6">
-                    <h4 class="text-lg font-semibold mb-3 text-purple-400">
-                        <i class="fas fa-upload mr-2"></i>2. Upload Model
-                    </h4>
-                    <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code># Upload a 3D model
-curl -X POST https://3d-asset-manager.deepdey.me/api/upload \
-  -b cookies.txt \
-  -F "file=@model.glb" \
-  -F "name=My Keyboard" \
-  -F "description=Gaming keyboard model" \
-  -F "is_public=true"</code></pre>
-                </div>
-
-                <!-- Download -->
-                <div class="bg-gray-800 rounded-lg p-6">
-                    <h4 class="text-lg font-semibold mb-3 text-orange-400">
-                        <i class="fas fa-download mr-2"></i>3. Download Model
-                    </h4>
-                    <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code># Download model by ID
-curl -X GET https://3d-asset-manager.deepdey.me/api/download/1 \
-  -b cookies.txt \
-  -o downloaded_model.glb
-
-# Or browse public models
-curl https://3d-asset-manager.deepdey.me/api/models</code></pre>
-                </div>
-            </div>
-
-            <!-- Additional Examples -->
-            <div class="mt-8 bg-gray-800 rounded-lg p-6">
-                <h4 class="text-lg font-semibold mb-4 text-yellow-400">
-                    <i class="fas fa-lightbulb mr-2"></i>Advanced Usage
-                </h4>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div>
-                        <h5 class="text-md font-semibold mb-2 text-cyan-400">List Your Models</h5>
-                        <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code>curl -X GET https://3d-asset-manager.deepdey.me/api/models?user=me \
-  -b cookies.txt</code></pre>
+            <!-- Step-by-step workflow -->
+            <div class="space-y-8">
+                
+                <!-- Step 1: Explore Public Models -->
+                <div class="bg-gray-800 rounded-lg p-6 border-l-4 border-green-500">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">1</div>
+                        <h4 class="text-xl font-semibold text-green-400">
+                            <i class="fas fa-search mr-2"></i>Discover Available Models
+                        </h4>
                     </div>
-                    <div>
-                        <h5 class="text-md font-semibold mb-2 text-pink-400">Delete Model</h5>
-                        <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code>curl -X DELETE https://3d-asset-manager.deepdey.me/api/model/1 \
-  -b cookies.txt</code></pre>
+                    <p class="text-gray-300 mb-4">Start by exploring what 3D models are publicly available:</p>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-green-400 text-sm">💡 Try this command:</span>
+                            <button onclick="copyToClipboard('cmd1')" class="text-blue-400 hover:text-blue-300 text-xs">
+                                <i class="fas fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <pre id="cmd1" class="text-green-400 text-sm overflow-x-auto"><code>curl "https://3d-asset-manager.deepdey.me/api/models" | python -m json.tool</code></pre>
+                    </div>
+                    <div class="mt-3 text-sm text-gray-400">
+                        <strong>What you'll get:</strong> List of all public 3D models with their IDs, names, formats, and download counts
+                    </div>
+                </div>
+
+                <!-- Step 2: Get Model Details -->
+                <div class="bg-gray-800 rounded-lg p-6 border-l-4 border-blue-500">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">2</div>
+                        <h4 class="text-xl font-semibold text-blue-400">
+                            <i class="fas fa-info-circle mr-2"></i>Get Model Information
+                        </h4>
+                    </div>
+                    <p class="text-gray-300 mb-4">Get detailed information about a specific model:</p>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-blue-400 text-sm">💡 Replace MODEL_ID with an actual ID from step 1:</span>
+                            <button onclick="copyToClipboard('cmd2')" class="text-blue-400 hover:text-blue-300 text-xs">
+                                <i class="fas fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <pre id="cmd2" class="text-green-400 text-sm overflow-x-auto"><code>curl "https://3d-asset-manager.deepdey.me/api/model/MODEL_ID"</code></pre>
+                    </div>
+                    <div class="mt-3 text-sm text-gray-400">
+                        <strong>What you'll get:</strong> Complete model details, owner info, file size, upload date, and description
+                    </div>
+                </div>
+
+                <!-- Step 3: Download Model -->
+                <div class="bg-gray-800 rounded-lg p-6 border-l-4 border-purple-500">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">3</div>
+                        <h4 class="text-xl font-semibold text-purple-400">
+                            <i class="fas fa-download mr-2"></i>Download a 3D Model
+                        </h4>
+                    </div>
+                    <p class="text-gray-300 mb-4">Download any public model to your computer:</p>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-purple-400 text-sm">💡 This saves the file locally:</span>
+                            <button onclick="copyToClipboard('cmd3')" class="text-blue-400 hover:text-blue-300 text-xs">
+                                <i class="fas fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <pre id="cmd3" class="text-green-400 text-sm overflow-x-auto"><code>curl -L "https://3d-asset-manager.deepdey.me/api/download/MODEL_ID" -o my_downloaded_model.glb</code></pre>
+                    </div>
+                    <div class="mt-3 text-sm text-gray-400">
+                        <strong>Result:</strong> The 3D model file will be saved to your current directory
+                    </div>
+                </div>
+
+                <!-- Step 4: Search Models -->
+                <div class="bg-gray-800 rounded-lg p-6 border-l-4 border-yellow-500">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-yellow-500 text-black rounded-full w-8 h-8 flex items-center justify-center font-bold mr-3">4</div>
+                        <h4 class="text-xl font-semibold text-yellow-400">
+                            <i class="fas fa-filter mr-2"></i>Search for Specific Models
+                        </h4>
+                    </div>
+                    <p class="text-gray-300 mb-4">Find models by keyword or filter results:</p>
+                    <div class="bg-gray-900 rounded-lg p-4 space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-yellow-400 text-sm">🔍 Search by keyword:</span>
+                                <button onclick="copyToClipboard('cmd4a')" class="text-blue-400 hover:text-blue-300 text-xs">
+                                    <i class="fas fa-copy mr-1"></i>Copy
+                                </button>
+                            </div>
+                            <pre id="cmd4a" class="text-green-400 text-sm overflow-x-auto"><code>curl "https://3d-asset-manager.deepdey.me/api/models?search=keyboard"</code></pre>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-yellow-400 text-sm">📄 Get specific page:</span>
+                                <button onclick="copyToClipboard('cmd4b')" class="text-blue-400 hover:text-blue-300 text-xs">
+                                    <i class="fas fa-copy mr-1"></i>Copy
+                                </button>
+                            </div>
+                            <pre id="cmd4b" class="text-green-400 text-sm overflow-x-auto"><code>curl "https://3d-asset-manager.deepdey.me/api/models?page=2&per_page=5"</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Authentication Required Section -->
+                <div class="bg-gradient-to-r from-red-900 to-orange-900 rounded-lg p-6 border border-red-500">
+                    <h4 class="text-xl font-semibold text-red-300 mb-4">
+                        <i class="fas fa-lock mr-2"></i>For Account Holders: Upload & Manage
+                    </h4>
+                    <p class="text-gray-300 mb-4">To upload models or access your personal collection, you need to authenticate:</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Login -->
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h5 class="text-red-400 font-semibold">🔐 Step 1: Login</h5>
+                                <button onclick="copyToClipboard('cmd5a')" class="text-blue-400 hover:text-blue-300 text-xs">
+                                    <i class="fas fa-copy mr-1"></i>Copy
+                                </button>
+                            </div>
+                            <pre id="cmd5a" class="text-green-400 text-xs overflow-x-auto"><code>curl -X POST "https://3d-asset-manager.deepdey.me/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "your-email@example.com", "password": "your-password"}' \
+  -c cookies.txt</code></pre>
+                        </div>
+
+                        <!-- Upload -->
+                        <div class="bg-gray-900 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <h5 class="text-orange-400 font-semibold">📤 Step 2: Upload Model</h5>
+                                <button onclick="copyToClipboard('cmd5b')" class="text-blue-400 hover:text-blue-300 text-xs">
+                                    <i class="fas fa-copy mr-1"></i>Copy
+                                </button>
+                            </div>
+                            <pre id="cmd5b" class="text-green-400 text-xs overflow-x-auto"><code>curl -X POST "https://3d-asset-manager.deepdey.me/api/upload" \
+  -b cookies.txt \
+  -F "file=@your-model.glb" \
+  -F "name=My Amazing Model" \
+  -F "description=A cool 3D model" \
+  -F "is_public=true"</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Test Section -->
+                <div class="bg-gradient-to-br from-green-800 to-blue-800 rounded-lg p-6 text-center">
+                    <h4 class="text-2xl font-semibold text-white mb-4">
+                        <i class="fas fa-rocket mr-2"></i>Quick API Test
+                    </h4>
+                    <p class="text-gray-200 mb-4">Want to test immediately? Try this simple command:</p>
+                    <div class="bg-gray-900 rounded-lg p-4 mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-green-400 text-sm">🚀 One-liner to see our API in action:</span>
+                            <button onclick="copyToClipboard('cmdQuick')" class="text-blue-400 hover:text-blue-300 text-xs">
+                                <i class="fas fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <pre id="cmdQuick" class="text-green-400 text-sm overflow-x-auto"><code>curl "https://3d-asset-manager.deepdey.me/api/test" && echo -e "\n✅ API is working!"</code></pre>
+                    </div>
+                    <div class="bg-green-100 text-green-800 rounded-lg p-3 text-sm">
+                        <strong>💡 Pro Tip:</strong> All public endpoints work without authentication. Perfect for exploring!
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Copy to Clipboard JavaScript -->
+        <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(function() {
+                // Visual feedback
+                const button = element.parentNode.querySelector('button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                button.classList.remove('text-blue-400');
+                button.classList.add('text-green-400');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('text-green-400');
+                    button.classList.add('text-blue-400');
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+        </script>
     </div>
 </section>
 {% endblock %}
