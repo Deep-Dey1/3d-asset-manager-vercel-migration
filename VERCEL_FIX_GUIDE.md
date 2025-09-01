@@ -27,12 +27,12 @@ Go to Vercel Dashboard → Your Project → Settings → Environment Variables
 
 **MONGODB_URI:**
 ```
-mongodb+srv://admin:Deep%400210@cluster0.hbtw6u0.mongodb.net/3d_asset_manager?retryWrites=true&w=majority&appName=Cluster0
+mongodb+srv://your-username:your-encoded-password@your-cluster.mongodb.net/your-database?retryWrites=true&w=majority&appName=YourApp
 ```
 
 **SECRET_KEY:**
 ```
-3d-asset-manager-vercel-production-secret-key-2025
+your-super-secure-secret-key-change-this-in-production
 ```
 
 **FLASK_ENV:**

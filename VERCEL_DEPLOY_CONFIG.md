@@ -6,12 +6,12 @@ Copy these exact values to your Vercel project's environment variables:
 
 ### 1. MONGODB_URI
 ```
-mongodb+srv://admin:Deep%400210@cluster0.hbtw6u0.mongodb.net/3d_asset_manager?retryWrites=true&w=majority&appName=Cluster0
+mongodb+srv://your-username:your-encoded-password@your-cluster.mongodb.net/your-database?retryWrites=true&w=majority&appName=YourApp
 ```
 
 ### 2. SECRET_KEY
 ```
-3d-asset-manager-vercel-super-secret-key-2025-change-this-in-production
+your-super-secure-secret-key-change-this-in-production
 ```
 
 ### 3. FLASK_ENV
@@ -49,12 +49,12 @@ git push -u origin main
 
 **MONGODB_URI:**
 ```
-mongodb+srv://admin:Deep%400210@cluster0.hbtw6u0.mongodb.net/3d_asset_manager?retryWrites=true&w=majority&appName=Cluster0
+mongodb+srv://your-username:your-encoded-password@your-cluster.mongodb.net/your-database?retryWrites=true&w=majority&appName=YourApp
 ```
 
 **SECRET_KEY:**
 ```
-3d-asset-manager-vercel-super-secret-key-2025-change-this-in-production
+your-super-secure-secret-key-change-this-in-production
 ```
 
 **FLASK_ENV:**
@@ -97,7 +97,8 @@ After login: `https://your-project-name.vercel.app/upload`
 ## 🔑 **Important Notes**
 
 ### **MongoDB URI Encoding**
-- Password `Deep@0210` is URL-encoded as `Deep%400210`
+- Password with special characters must be URL-encoded
+- Example: `MyP@ssw0rd` becomes `MyP%40ssw0rd`
 - The `@` symbol becomes `%40` in URLs
 - Database name `3d_asset_manager` is added to the path
 

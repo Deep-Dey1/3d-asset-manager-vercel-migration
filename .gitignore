@@ -1,9 +1,22 @@
 # 3D Asset Manager - Vercel Version - .gitignore
 
-# Environment Variables
+# ============================================
+# CRITICAL SECURITY - Environment Variables
+# ============================================
 .env
 .env.local
 .env.production
+.env.development
+.env.staging
+*.env
+!.env.example
+
+# Additional sensitive files
+config.py
+secrets.json
+credentials.json
+*_credentials.*
+*_secrets.*
 
 # Python
 __pycache__/

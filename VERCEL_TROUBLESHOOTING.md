@@ -112,7 +112,7 @@ $ → %24
 
 **Your encoded connection:**
 ```
-mongodb+srv://admin:Deep%400210@cluster0.hbtw6u0.mongodb.net/3d_asset_manager?retryWrites=true&w=majority&appName=Cluster0
+mongodb+srv://your-username:your-encoded-password@your-cluster.mongodb.net/your-database?retryWrites=true&w=majority&appName=YourApp
 ```
 
 ---
