@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <i class="fas fa-sign-in-alt mr-2"></i>1. Login
                     </h4>
                     <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code># Login to get session
-curl -X POST https://your-project.vercel.app/auth/login \
+curl -X POST https://3d-asset-manager.deepdey.me/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -285,7 +285,7 @@ curl -X POST https://your-project.vercel.app/auth/login \
                         <i class="fas fa-upload mr-2"></i>2. Upload Model
                     </h4>
                     <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code># Upload a 3D model
-curl -X POST https://your-project.vercel.app/api/upload \
+curl -X POST https://3d-asset-manager.deepdey.me/api/upload \
   -b cookies.txt \
   -F "file=@model.glb" \
   -F "name=My Keyboard" \
@@ -299,12 +299,12 @@ curl -X POST https://your-project.vercel.app/api/upload \
                         <i class="fas fa-download mr-2"></i>3. Download Model
                     </h4>
                     <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code># Download model by ID
-curl -X GET https://your-project.vercel.app/api/download/1 \
+curl -X GET https://3d-asset-manager.deepdey.me/api/download/1 \
   -b cookies.txt \
   -o downloaded_model.glb
 
 # Or browse public models
-curl https://your-project.vercel.app/api/models</code></pre>
+curl https://3d-asset-manager.deepdey.me/api/models</code></pre>
                 </div>
             </div>
 
@@ -316,12 +316,12 @@ curl https://your-project.vercel.app/api/models</code></pre>
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
                         <h5 class="text-md font-semibold mb-2 text-cyan-400">List Your Models</h5>
-                        <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code>curl -X GET https://your-project.vercel.app/api/models?user=me \
+                        <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code>curl -X GET https://3d-asset-manager.deepdey.me/api/models?user=me \
   -b cookies.txt</code></pre>
                     </div>
                     <div>
                         <h5 class="text-md font-semibold mb-2 text-pink-400">Delete Model</h5>
-                        <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code>curl -X DELETE https://your-project.vercel.app/api/model/1 \
+                        <pre class="text-sm text-green-400 bg-gray-900 p-3 rounded overflow-x-auto"><code>curl -X DELETE https://3d-asset-manager.deepdey.me/api/model/1 \
   -b cookies.txt</code></pre>
                     </div>
                 </div>
