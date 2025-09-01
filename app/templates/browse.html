@@ -58,8 +58,8 @@
                     </p>
                     
                     <div class="flex justify-between items-center text-sm text-gray-500 mb-3">
-                        <span>By {{ model.user.username }}</span>
-                        <span>{{ model.downloads }} downloads</span>
+                        <span>By {{ model.owner_username or 'Unknown' }}</span>
+                        <span>{{ model.download_count }} downloads</span>
                     </div>
                     
                     <div class="flex justify-between items-center">

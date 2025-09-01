@@ -79,7 +79,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <h4 class="font-semibold text-gray-700">Uploaded By</h4>
-                        <p class="text-gray-600">{{ model.user.username }}</p>
+                        <p class="text-gray-600">{{ owner.username if owner else 'Unknown' }}</p>
                     </div>
                     <div>
                         <h4 class="font-semibold text-gray-700">Upload Date</h4>
@@ -90,7 +90,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <h4 class="font-semibold text-gray-700">Downloads</h4>
-                        <p class="text-gray-600">{{ model.downloads }}</p>
+                        <p class="text-gray-600">{{ model.download_count }}</p>
                     </div>
                     <div>
                         <h4 class="font-semibold text-gray-700">Visibility</h4>

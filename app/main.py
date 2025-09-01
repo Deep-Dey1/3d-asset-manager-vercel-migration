@@ -16,8 +16,12 @@ def index():
         recent_models, total_public = Model3D.get_public_models(page=1, per_page=6)
         
         print(f"📋 Found {total_public} public models for homepage")
-        for i, model in enumerate(recent_models[:3]):
-            print(f"   Recent Model {i+1}: {model.name} (Public: {model.is_public})")
+        
+        # Add owner username to each model
+        for model in recent_models:
+            user = User.get_by_id(model.user_id)
+            model.owner_username = user.username if user else 'Unknown'
+            print(f"   Model: {model.name} by {model.owner_username}")
         
         # Get statistics
         stats = Model3D.get_stats()
@@ -87,8 +91,14 @@ def browse():
         models, total = Model3D.get_public_models(page=page, per_page=12, search=search if search else None)
         
         print(f"📋 Found {total} public models")
+        
+        # Add owner username to each model
+        for model in models:
+            user = User.get_by_id(model.user_id)
+            model.owner_username = user.username if user else 'Unknown'
+        
         for i, model in enumerate(models[:3]):
-            print(f"   Public Model {i+1}: {model.name} (ID: {model.id})")
+            print(f"   Public Model {i+1}: {model.name} by {model.owner_username} (ID: {model.id})")
         
         # Calculate pagination info
         total_pages = (total + 11) // 12  # Ceiling division

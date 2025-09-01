@@ -136,8 +136,8 @@
                         {% endif %}
                     </p>
                     <div class="flex justify-between items-center text-sm text-gray-500">
-                        <span>by {{ model.user.username }}</span>
-                        <span>{{ model.downloads }} downloads</span>
+                        <span>by {{ model.owner_username or 'Unknown' }}</span>
+                        <span>{{ model.download_count }} downloads</span>
                     </div>
                     <div class="mt-4">
                         <a href="{{ url_for('main.model_detail', model_id=model.id) }}" 
