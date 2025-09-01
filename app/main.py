@@ -76,11 +76,19 @@ def dashboard():
 def browse():
     """Browse public models"""
     try:
+        print("🔄 Loading browse page...")
+        
         search = request.args.get('search', '').strip()
         page = request.args.get('page', 1, type=int)
         
+        print(f"📋 Browse params - Page: {page}, Search: '{search}'")
+        
         # Get public models with pagination
         models, total = Model3D.get_public_models(page=page, per_page=12, search=search if search else None)
+        
+        print(f"📋 Found {total} public models")
+        for i, model in enumerate(models[:3]):
+            print(f"   Public Model {i+1}: {model.name} (ID: {model.id})")
         
         # Calculate pagination info
         total_pages = (total + 11) // 12  # Ceiling division
@@ -105,7 +113,9 @@ def browse():
         return render_template('browse.html', models=pagination, search=search)
         
     except Exception as e:
-        print(f"Browse error: {e}")
+        print(f"❌ Browse error: {e}")
+        import traceback
+        traceback.print_exc()
         # Return empty pagination on error
         class EmptyPagination:
             items = []
@@ -123,24 +133,33 @@ def browse():
 def model_detail(model_id):
     """View model details"""
     try:
+        print(f"🔄 Loading model detail for ID: {model_id}")
+        
         model = Model3D.get_by_id(model_id)
         if not model:
+            print(f"❌ Model not found: {model_id}")
             flash('Model not found.', 'error')
             return redirect(url_for('main.browse'))
+        
+        print(f"✅ Model found: {model.name} (Public: {model.is_public})")
         
         # Check access permissions
         if not model.is_public:
             if not current_user.is_authenticated or model.user_id != current_user.id:
+                print(f"❌ Access denied for model: {model_id}")
                 flash('You do not have permission to view this model.', 'error')
                 return redirect(url_for('main.browse'))
         
         # Get model owner info
         owner = User.get_by_id(model.user_id)
+        print(f"✅ Owner found: {owner.username if owner else 'Unknown'}")
         
         return render_template('model_detail.html', model=model, owner=owner)
         
     except Exception as e:
-        print(f"Model detail error: {e}")
+        print(f"❌ Model detail error: {e}")
+        import traceback
+        traceback.print_exc()
         flash('Error loading model details.', 'error')
         return redirect(url_for('main.browse'))
 
