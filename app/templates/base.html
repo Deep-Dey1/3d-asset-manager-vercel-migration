@@ -19,8 +19,11 @@
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-4">
-                    <a href="{{ url_for('main.index') }}" class="text-2xl font-bold text-indigo-600">
-                        <i class="fas fa-cube mr-2"></i>3D Asset Manager
+                    <a href="{{ url_for('main.index') }}" class="flex items-center space-x-3">
+                        <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-md">
+                            <i class="fas fa-cube text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-indigo-600">3D Asset Manager</span>
                     </a>
                 </div>
                 <div class="flex items-center space-x-6">
@@ -80,7 +83,18 @@
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
-                <p>&copy; 2025 3D Asset Manager. Built with Flask & deployed on Railway.</p>
+                <p>&copy; 2025 3D Asset Manager. Created by Deep Dey</p>
+                <div class="mt-2 flex justify-center space-x-6 text-sm">
+                    <a href="mailto:deepdey715@gmail.com" class="text-gray-300 hover:text-white transition">
+                        <i class="fas fa-envelope mr-1"></i>deepdey715@gmail.com
+                    </a>
+                    <a href="https://www.linkedin.com/in/deepdey0210/" target="_blank" class="text-gray-300 hover:text-white transition">
+                        <i class="fab fa-linkedin mr-1"></i>LinkedIn
+                    </a>
+                    <a href="https://github.com/Deep-Dey1" target="_blank" class="text-gray-300 hover:text-white transition">
+                        <i class="fab fa-github mr-1"></i>GitHub
+                    </a>
+                </div>
             </div>
         </div>
     </footer>
