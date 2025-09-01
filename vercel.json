@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "api/index.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python@4.1.0"
     }
   ],
   "routes": [
@@ -17,6 +17,7 @@
   },
   "functions": {
     "api/index.py": {
+      "runtime": "python3.9",
       "maxDuration": 30
     }
   }

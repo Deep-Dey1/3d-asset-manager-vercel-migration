@@ -25,6 +25,14 @@ def create_app():
     if not mongo_uri:
         raise Exception("MONGODB_URI environment variable is required")
     
+    # Ensure proper URL encoding for MongoDB connection
+    from urllib.parse import quote_plus
+    
+    # If the URI contains unencoded characters, fix them
+    if '@' in mongo_uri and 'Deep@0210' in mongo_uri:
+        # Replace unencoded password with encoded version
+        mongo_uri = mongo_uri.replace('Deep@0210', quote_plus('Deep@0210'))
+    
     try:
         global mongo_client, db, fs
         
