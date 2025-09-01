@@ -231,3 +231,90 @@ def get_user_models():
     except Exception as e:
         print(f"API user models error: {e}")
         return jsonify({'error': 'Failed to retrieve user models'}), 500
+
+@api_bp.route('/upload', methods=['POST'])
+@login_required
+def upload_model():
+    """API endpoint for uploading 3D models"""
+    try:
+        # Get form data
+        name = request.form.get('name', '').strip()
+        description = request.form.get('description', '').strip()
+        is_public = request.form.get('is_public') == 'true'  # Note: 'true' for JSON boolean
+        
+        # Get uploaded file
+        file = request.files.get('file')
+        
+        if not file or file.filename == '':
+            return jsonify({'error': 'Please select a file to upload.'}), 400
+        
+        if not name:
+            return jsonify({'error': 'Please provide a name for your model.'}), 400
+        
+        # Import secure_filename
+        from werkzeug.utils import secure_filename
+        
+        # Validate file extension
+        filename = secure_filename(file.filename)
+        file_extension = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+        
+        allowed_extensions = current_app.config['ALLOWED_EXTENSIONS']
+        if file_extension not in allowed_extensions:
+            return jsonify({'error': f'File type not supported. Allowed: {", ".join(allowed_extensions)}'}), 400
+        
+        # Read file content
+        file_content = file.read()
+        file_size = len(file_content)
+        
+        # Check file size (100MB limit)
+        if file_size > current_app.config['MAX_CONTENT_LENGTH']:
+            return jsonify({'error': 'File too large. Maximum size is 100MB.'}), 400
+        
+        # Store file in GridFS
+        fs = current_app.config['GRIDFS']
+        gridfs_file_id = fs.put(
+            file_content,
+            filename=filename,
+            content_type=file.content_type,
+            metadata={
+                'original_filename': file.filename,
+                'uploaded_by': current_user.id,
+                'upload_date': Model3D().upload_date
+            }
+        )
+        
+        # Create model record
+        model = Model3D(
+            name=name,
+            description=description,
+            file_format=file_extension,
+            file_size=file_size,
+            original_filename=file.filename,
+            user_id=current_user.id,
+            is_public=is_public,
+            gridfs_file_id=str(gridfs_file_id)
+        )
+        
+        model.save()
+        
+        # Return success response with model data
+        return jsonify({
+            'success': True,
+            'message': f'Model "{name}" uploaded successfully!',
+            'model': {
+                'id': model.id,
+                'name': model.name,
+                'description': model.description,
+                'file_format': model.file_format,
+                'file_size': model.file_size,
+                'original_filename': model.original_filename,
+                'is_public': model.is_public,
+                'upload_date': model.upload_date.isoformat() if model.upload_date else None
+            }
+        }), 201
+        
+    except Exception as e:
+        print(f"API upload error: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': 'Upload failed. Please try again.'}), 500
