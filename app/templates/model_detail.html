@@ -1,0 +1,221 @@
+{% extends "base_3d.html" %}
+
+{% block title %}{{ model.name }} - 3D Asset Manager{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Back Button -->
+    <div class="mb-6">
+        <a href="{{ url_for('main.browse') }}" 
+           class="text-blue-600 hover:text-blue-800 flex items-center">
+            ← Back to Browse
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Enhanced 3D Model Preview -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div id="viewer-detail-{{ model.id }}" class="model-viewer-large">
+                <div class="flex items-center justify-center h-full bg-gray-50">
+                    <div class="text-center">
+                        <div class="text-6xl text-gray-400 mb-4">🎨</div>
+                        <p class="text-gray-600 mb-4">{{ model.file_format.upper() }} 3D Model</p>
+                        <button onclick="loadDetailModel('{{ model.id }}')" 
+                                class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                            <i class="fas fa-cube mr-2"></i>Load 3D Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Viewer Controls -->
+            <div class="mt-4 flex justify-between items-center">
+                <div class="text-sm text-gray-600">
+                    <i class="fas fa-mouse text-blue-500 mr-1"></i>Drag to rotate • 
+                    <i class="fas fa-scroll text-green-500 mr-1"></i>Scroll to zoom • 
+                    <i class="fas fa-hand-paper text-purple-500 mr-1"></i>Touch controls
+                </div>
+                <button onclick="resetDetailCamera()" 
+                        class="text-blue-600 hover:text-blue-800 text-sm">
+                    <i class="fas fa-home mr-1"></i>Reset View
+                </button>
+            </div>
+            
+            <!-- Download Button -->
+            <a href="{{ url_for('api.download_model', model_id=model.id) }}" 
+               class="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition flex items-center justify-center mt-4">
+                <i class="fas fa-download mr-2"></i>
+                Download Model ({{ "%.2f"|format(model.file_size / 1024 / 1024) }} MB)
+            </a>
+        </div>
+
+        <!-- Model Details -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ model.name }}</h1>
+            
+            <div class="space-y-4">
+                <!-- Description -->
+                <div>
+                    <h3 class="font-semibold text-gray-700 mb-2">Description</h3>
+                    <p class="text-gray-600">
+                        {{ model.description or "No description provided." }}
+                    </p>
+                </div>
+
+                <!-- Metadata -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-700">Format</h4>
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
+                            {{ model.file_format.upper() }}
+                        </span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700">File Size</h4>
+                        <p class="text-gray-600">{{ "%.2f"|format(model.file_size / 1024 / 1024) }} MB</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-700">Uploaded By</h4>
+                        <p class="text-gray-600">{{ model.user.username }}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700">Upload Date</h4>
+                        <p class="text-gray-600">{{ model.upload_date.strftime('%B %d, %Y') }}</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-700">Downloads</h4>
+                        <p class="text-gray-600">{{ model.downloads }}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-700">Visibility</h4>
+                        <span class="bg-{{ 'green' if model.is_public else 'orange' }}-100 text-{{ 'green' if model.is_public else 'orange' }}-800 px-2 py-1 rounded text-sm">
+                            {{ "Public" if model.is_public else "Private" }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 3D Viewer Features -->
+                <div class="border-t pt-4">
+                    <h3 class="font-semibold text-gray-700 mb-2">3D Viewer Features</h3>
+                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                        <div>✓ Interactive rotation</div>
+                        <div>✓ Zoom controls</div>
+                        <div>✓ Auto-lighting</div>
+                        <div>✓ Multiple formats</div>
+                    </div>
+                </div>
+
+                <!-- API Information -->
+                <div class="border-t pt-4">
+                    <h3 class="font-semibold text-gray-700 mb-2">API Access</h3>
+                    <div class="bg-gray-100 p-3 rounded">
+                        <p class="text-sm text-gray-600 mb-1">Direct API Download:</p>
+                        <code class="text-xs bg-gray-200 px-2 py-1 rounded block">
+                            GET {{ request.url_root }}api/download/{{ model.id }}
+                        </code>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                {% if current_user.is_authenticated and current_user.id == model.user_id %}
+                <div class="border-t pt-4">
+                    <h3 class="font-semibold text-gray-700 mb-3">Manage Model</h3>
+                    <div class="flex space-x-2">
+                        <button data-model-id="{{ model.id }}" 
+                                onclick="deleteModel(this.getAttribute('data-model-id'))"
+                                class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+                            Delete Model
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let detailViewer = null;
+
+function loadDetailModel(modelId) {
+    const container = document.getElementById(`viewer-detail-${modelId}`);
+    if (!container) return;
+    
+    try {
+        // Use the new model-viewer web component for detail view
+        detailViewer = createDetailedModelViewer(`viewer-detail-${modelId}`, modelId, {
+            name: '{{ model.name }}',
+            description: '{{ model.description }}',
+            format: '{{ model.file_format }}'
+        });
+        
+        console.log('Detail model viewer created successfully');
+    } catch (error) {
+        console.error('Failed to load 3D model:', error);
+        container.innerHTML = `
+            <div class="flex items-center justify-center h-full bg-red-50 text-red-600">
+                <div class="text-center">
+                    <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                    <div class="text-lg mb-2">Failed to load 3D preview</div>
+                    <div class="text-sm">Model file may be corrupted or in an unsupported format</div>
+                    <div class="text-xs mt-2 text-gray-500">Supported formats: GLB, GLTF, OBJ, FBX</div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function resetDetailCamera() {
+    const container = document.getElementById('viewer-detail-{{ model.id }}');
+    const modelViewer = container?.querySelector('model-viewer');
+    if (modelViewer) {
+        modelViewer.resetTurntableRotation();
+        modelViewer.jumpCameraToGoal();
+    }
+}
+
+// Auto-load the model on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Small delay to ensure model-viewer is ready
+    setTimeout(() => {
+        loadDetailModel('{{ model.id }}');
+    }, 500);
+});
+
+</script>
+
+{% if current_user.is_authenticated and current_user.id == model.user_id %}
+<script>
+// Delete model function (only available to model owner)
+function deleteModel(modelId) {
+    if (confirm('Are you sure you want to delete this model? This action cannot be undone.')) {
+        fetch('/api/model/' + modelId, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Model deleted successfully');
+                window.location.href = '{{ url_for("main.dashboard") }}';
+            } else {
+                alert('Error deleting model: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Error deleting model');
+            console.error('Error:', error);
+        });
+    }
+}
+</script>
+{% endif %}
+{% endblock %}
